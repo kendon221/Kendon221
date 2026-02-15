@@ -1,0 +1,139 @@
+using UnityEngine;
+using UnityEngine.UI;
+using System;
+
+public class IdleInvestmentGame : MonoBehaviour
+{
+    [Header("Money System")]
+    public double money = 1000;
+    public double incomePerSecond = 0;
+
+    [Header("Investment Settings")]
+    public double stockCost = 100;
+    public double estateCost = 1000;
+    public double cryptoCost = 5000;
+
+    [Header("Income Values")]
+    public double stockIncome = 5;
+    public double estateIncome = 50;
+    public double cryptoIncome = 200;
+
+    [Header("UI")]
+    public Text moneyText;
+    public Text incomeText;
+    public Button europeButton;
+    public Button asiaButton;
+
+    void Start()
+    {
+        LoadGame();
+
+        if (europeButton != null)
+            europeButton.gameObject.SetActive(false);
+
+        if (asiaButton != null)
+            asiaButton.gameObject.SetActive(false);
+    }
+
+    void Update()
+    {
+        money += incomePerSecond * Time.deltaTime;
+        UpdateUI();
+        UnlockRegions();
+    }
+
+    void UpdateUI()
+    {
+        if (moneyText != null)
+            moneyText.text = "Money: $" + FormatNumber(money);
+
+        if (incomeText != null)
+            incomeText.text = "Income: $" + FormatNumber(incomePerSecond) + "/sec";
+    }
+
+    string FormatNumber(double num)
+    {
+        if (num >= 1000000000)
+            return (num / 1000000000).ToString("F2") + "B";
+        if (num >= 1000000)
+            return (num / 1000000).ToString("F2") + "M";
+        if (num >= 1000)
+            return (num / 1000).ToString("F2") + "K";
+
+        return num.ToString("F2");
+    }
+
+    public void BuyStock()
+    {
+        if (money >= stockCost)
+        {
+            money -= stockCost;
+            incomePerSecond += stockIncome;
+            stockCost *= 1.15;
+        }
+    }
+
+    public void BuyEstate()
+    {
+        if (money >= estateCost)
+        {
+            money -= estateCost;
+            incomePerSecond += estateIncome;
+            estateCost *= 1.20;
+        }
+    }
+
+    public void BuyCrypto()
+    {
+        if (money >= cryptoCost)
+        {
+            money -= cryptoCost;
+            incomePerSecond += cryptoIncome;
+            cryptoCost *= 1.25;
+        }
+    }
+
+    void UnlockRegions()
+    {
+        if (money >= 1000000 && europeButton != null)
+            europeButton.gameObject.SetActive(true);
+
+        if (money >= 10000000 && asiaButton != null)
+            asiaButton.gameObject.SetActive(true);
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveGame();
+    }
+
+    void SaveGame()
+    {
+        PlayerPrefs.SetString("money", money.ToString());
+        PlayerPrefs.SetString("income", incomePerSecond.ToString());
+    }
+
+    void LoadGame()
+    {
+        if (PlayerPrefs.HasKey("money"))
+        {
+            money = double.Parse(PlayerPrefs.GetString("money"));
+            incomePerSecond = double.Parse(PlayerPrefs.GetString("income"));
+        }
+    }
+}## Hi there 👋
+
+<!--
+**kendon221/Kendon221** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+
+Here are some ideas to get you started:
+
+- 🔭 I’m currently working on ...
+- 🌱 I’m currently learning ...
+- 👯 I’m looking to collaborate on ...
+- 🤔 I’m looking for help with ...
+- 💬 Ask me about ...
+- 📫 How to reach me: ...
+- 😄 Pronouns: ...
+- ⚡ Fun fact: ...
+-->
